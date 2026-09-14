@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NomadicERP Local</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">NE</div>
+        <div>
+          <strong class="brand-name">NomadicERP <span class="brand-leaf" aria-label="Maple leaf">🍁</span></strong>
+          <span>Local project control</span>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="dashboard">Dashboard</button>
+        <button class="nav-item" data-view="masters">Masters</button>
+        <button class="nav-item" data-view="projects">Projects</button>
+        <button class="nav-item" data-view="billing">Client Bills</button>
+        <button class="nav-item" data-view="clientPayments">Client Payments</button>
+        <button class="nav-item" data-view="procurement">Procurement</button>
+        <button class="nav-item" data-view="grn">GRN</button>
+        <button class="nav-item" data-view="issues">Material Issue</button>
+        <button class="nav-item" data-view="inventory">Inventory</button>
+        <button class="nav-item" data-view="costing">Costing</button>
+        <button class="nav-item" data-view="subcontractors">Subcontractors</button>
+        <button class="nav-item" data-view="boqs">BOQ</button>
+        <button class="nav-item" data-view="workOrders">Work Orders</button>
+        <button class="nav-item" data-view="subcontractorBills">Subcontractor Bill</button>
+        <button class="nav-item" data-view="contractorPayments">Subcontractor Payments</button>
+        <button class="nav-item" data-view="assets">Assets</button>
+        <button class="nav-item" data-view="documents">Documents</button>
+        <button class="nav-item" data-view="reports">Reports</button>
+        <button class="nav-item" data-view="settings">Backup</button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Single-user civil construction ERP</p>
+          <h1 id="viewTitle">Dashboard</h1>
+        </div>
+        <div class="top-actions">
+          <button id="seedBtn" class="ghost-btn" type="button">Load demo</button>
+          <button id="backupBtn" class="primary-btn" type="button">Export backup</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="view active">
+        <div class="section-head">
+          <div>
+            <h2>Dashboard</h2>
+            <p>Search across every tab at once. Matching is case-sensitive.</p>
+          </div>
+          <label class="search-wrap">
+            <span>Search everywhere</span>
+            <input id="globalSearch" type="search" placeholder="Search the whole app (case-sensitive)">
+          </label>
+        </div>
+        <div id="globalSearchResults" class="panel search-results-panel" hidden></div>
+        <div class="metric-grid" id="metricGrid"></div>
+        <div class="dashboard-layout">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Project Profitability</h2>
+              <span id="profitHint"></span>
+            </div>
+            <div id="profitChart" class="bar-chart"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Alerts</h2>
+              <span id="alertCount">0 active</span>
+            </div>
+            <div id="alertsList" class="list-stack"></div>
+          </section>
+        </div>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Daily Site Activity</h2>
+            <button class="small-btn" data-open-modal="activity">Add activity</button>
+          </div>
+          <div id="activityList" class="activity-feed"></div>
+        </section>
+      </section>
+
+      <section id="masters" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Master Data</h2>
+            <p>Maintain reusable clients, vendors, contractors, materials, cost heads, and asset categories.</p>
+          </div>
+          <label class="search-wrap">
+            <span>Search</span>
+            <input id="mastersSearch" type="search" placeholder="Search this tab (case-sensitive)">
+          </label>
+        </div>
+        <div class="master-browser">
+          <section class="panel master-list-panel">
+            <div id="masterCategoryList" class="master-category-list"></div>
+          </section>
+          <section class="panel master-detail-panel">
+            <div id="masterDetail" class="master-detail"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="projects" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Project Management</h2>
+            <p>Track contract value, budget, manager, progress, and current cost exposure.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="projectsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="project" type="button">Add project</button>
+          </div>
+        </div>
+        <div id="projectsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="billing" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Client Billing</h2>
+            <p>Manage RA bills, certification, payment status, deductions, and outstanding amounts.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="billingSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="bill" type="button">Add bill</button>
+          </div>
+        </div>
+        <div id="billingTable" class="table-wrap"></div>
+      </section>
+
+      <section id="clientPayments" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Client Payments</h2>
+            <p>Record partial payments, bank references, TDS, retention, and automatically update bill outstanding.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="clientPaymentsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="clientPayment" type="button">Add payment</button>
+          </div>
+        </div>
+        <div id="clientPaymentsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="procurement" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Procurement</h2>
+            <p>Record material requisitions, purchase orders, vendor status, and delivery dates.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="procurementSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="purchase" type="button">Add purchase</button>
+          </div>
+        </div>
+        <div id="procurementTable" class="table-wrap"></div>
+      </section>
+
+      <section id="grn" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Goods Receipt Note</h2>
+            <p>Record incoming materials and automatically update project stock.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="grnSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="grn" type="button">Add GRN</button>
+          </div>
+        </div>
+        <div id="grnTable" class="table-wrap"></div>
+      </section>
+
+      <section id="issues" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Material Issue</h2>
+            <p>Record outgoing materials and automatically update issued stock.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="issuesSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="issue" type="button">Add issue</button>
+          </div>
+        </div>
+        <div id="issuesTable" class="table-wrap"></div>
+      </section>
+
+      <section id="inventory" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Store & Inventory</h2>
+            <p>Monitor opening stock, received quantity, issued quantity, balance, and low-stock alerts.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="inventorySearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="inventory" type="button">Add material</button>
+          </div>
+        </div>
+        <div id="inventoryTable" class="table-wrap"></div>
+      </section>
+
+      <section id="costing" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Project Costing</h2>
+            <p>Capture material, labour, machinery, fuel, transport, site overhead, and other expenses.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="costingSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="expense" type="button">Add expense</button>
+          </div>
+        </div>
+        <div id="costingTable" class="table-wrap"></div>
+      </section>
+
+      <section id="subcontractors" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Subcontractors</h2>
+            <p>Open each subcontractor's Projects area to manage project-wise work, billing, retention, and balances.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="subcontractorsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="subcontractor" type="button">Add project details</button>
+          </div>
+        </div>
+        <div id="subcontractorsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="boqs" class="view">
+        <div class="section-head">
+          <div>
+            <h2>BOQ</h2>
+            <p>Record client BOQs with quantity, rate, GST, TDS, retention, and net value.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="boqsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="boq" type="button">Add BOQ</button>
+          </div>
+        </div>
+        <div id="boqsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="workOrders" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Work Orders</h2>
+            <p>Record subcontractor work orders with quantity, rate, GST, TDS, retention, and net payable.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="workOrdersSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="workOrder" type="button">Add work order</button>
+          </div>
+        </div>
+        <div id="workOrdersTable" class="table-wrap"></div>
+      </section>
+
+      <section id="subcontractorBills" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Subcontractor Bill</h2>
+            <p>Create project-wise RA bills from work order items with previous, this bill, cumulative, GST, TDS, retention, and net payable.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="subcontractorBillsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="subcontractorBill" type="button">Add subcontractor bill</button>
+          </div>
+        </div>
+        <div id="subcontractorBillsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="contractorPayments" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Subcontractor Payments</h2>
+            <p>Record payments against subcontractor RA bills with payment mode, reference number, deductions, and outstanding update.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="contractorPaymentsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="contractorPayment" type="button">Add subcontractor payment</button>
+          </div>
+        </div>
+        <div id="contractorPaymentsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="assets" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Asset Management</h2>
+            <p>Track equipment, project allocation, maintenance dates, warranty, and service status.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="assetsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="asset" type="button">Add asset</button>
+          </div>
+        </div>
+        <div id="assetsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="documents" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Document Register</h2>
+            <p>Maintain a searchable register for work orders, BOQs, drawings, bills, certificates, and contracts.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search</span>
+              <input id="documentsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button class="primary-btn" data-open-modal="document" type="button">Add document</button>
+          </div>
+        </div>
+        <div id="documentsTable" class="table-wrap"></div>
+      </section>
+
+      <section id="reports" class="view">
+        <div class="section-head">
+          <div>
+            <h2>Professional Reports</h2>
+            <p>Generate management-ready reports in Excel-compatible or CSV format.</p>
+          </div>
+          <div class="button-row">
+            <label class="search-wrap">
+              <span>Search preview</span>
+              <input id="reportsSearch" type="search" placeholder="Search this tab (case-sensitive)">
+            </label>
+            <button id="exportReportBtn" class="primary-btn" type="button">Export report</button>
+            <button id="openReportsBtn" class="ghost-btn" type="button">Open reports folder</button>
+          </div>
+        </div>
+        <section class="panel">
+          <div class="report-controls">
+            <label>
+              <span>Report Type</span>
+              <select id="reportType">
+                <option value="project_summary">Project Summary</option>
+                <option value="profit_loss">Project-wise Profit & Loss</option>
+                <option value="client_outstanding">Client Outstanding</option>
+                <option value="client_payment_register">Client Payment Register</option>
+                <option value="procurement_summary">Procurement Summary</option>
+                <option value="grn_register">GRN Register</option>
+                <option value="material_issue_register">Material Issue Register</option>
+                <option value="inventory_stock">Current Stock</option>
+                <option value="material_consumption">Material Consumption</option>
+                <option value="expense_register">Expense Register</option>
+                <option value="cost_head_summary">Cost Head Summary</option>
+                <option value="contractor_outstanding">Subcontractor Outstanding</option>
+                <option value="boq_register">BOQ Register</option>
+                <option value="work_order_register">Work Order Register</option>
+                <option value="subcontractor_bill_register">Subcontractor Bill Register</option>
+                <option value="contractor_payment_register">Subcontractor Payment Register</option>
+                <option value="asset_register">Asset Register</option>
+              </select>
+            </label>
+            <label>
+              <span>Project Filter</span>
+              <select id="reportProject"></select>
+            </label>
+            <label>
+              <span>Format</span>
+              <select id="reportFormat">
+                <option value="xls">Excel Workbook (.xls)</option>
+                <option value="csv">CSV File (.csv)</option>
+              </select>
+            </label>
+          </div>
+        </section>
+        <section class="panel report-preview-panel">
+          <div class="panel-head">
+            <h2 id="reportPreviewTitle">Project Summary</h2>
+            <span id="reportPreviewMeta"></span>
+          </div>
+          <div id="reportSummary" class="report-summary"></div>
+          <div id="reportPreview" class="table-wrap"></div>
+        </section>
+      </section>
+
+      <section id="settings" class="view">
+        <div class="settings-grid">
+          <section class="panel">
+            <h2>Company Details</h2>
+            <p>These details appear on professional report exports.</p>
+            <form id="companyForm" class="settings-form">
+              <label>
+                <span>Company Name</span>
+                <input id="companyName" name="companyName" type="text" placeholder="Company name">
+              </label>
+              <label>
+                <span>GSTIN</span>
+                <input id="companyGstin" name="companyGstin" type="text" placeholder="GST number">
+              </label>
+              <label class="full">
+                <span>Address</span>
+                <textarea id="companyAddress" name="companyAddress" placeholder="Office address"></textarea>
+              </label>
+              <label>
+                <span>Phone</span>
+                <input id="companyPhone" name="companyPhone" type="text" placeholder="Phone number">
+              </label>
+              <label>
+                <span>Email</span>
+                <input id="companyEmail" name="companyEmail" type="email" placeholder="Email address">
+              </label>
+              <label>
+                <span>Prepared By</span>
+                <input id="preparedBy" name="preparedBy" type="text" placeholder="Name / department">
+              </label>
+              <div class="form-actions">
+                <button class="primary-btn" type="submit">Save details</button>
+              </div>
+            </form>
+          </section>
+          <section class="panel">
+            <h2>Backup & Restore</h2>
+            <p>Export all local ERP data as a JSON backup file. Restore replaces the current local data on this PC.</p>
+            <div class="button-row">
+              <button id="settingsExportBtn" class="primary-btn" type="button">Export backup</button>
+              <button id="openBackupsBtn" class="ghost-btn" type="button">Open backups folder</button>
+              <label class="file-btn">
+                Import backup
+                <input id="importFile" type="file" accept="application/json">
+              </label>
+              <button id="clearBtn" class="danger-btn" type="button">Clear local data</button>
+            </div>
+          </section>
+          <section class="panel">
+            <h2>Quick Help</h2>
+            <ul class="notes">
+              <li>Launch the app with "Launch NomadicERP.bat" for SQLite storage and saved report files.</li>
+              <li>Use Masters first for reusable clients, vendors, contractors, materials, units, and cost heads.</li>
+              <li>Use Export backup before clearing data or before moving the app to another PC.</li>
+              <li>Reports are saved in the reports folder and can also be exported as CSV.</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+      <footer class="app-footer" aria-label="NomadicERP footer">🍁</footer>
+    </main>
+  </div>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h2 id="modalTitle">Add record</h2>
+        <button id="closeModal" class="icon-btn" type="button" aria-label="Close">x</button>
+      </div>
+      <form id="recordForm" class="form-grid"></form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <template id="emptyStateTemplate">
+    <div class="empty-state">
+      <strong>No records yet</strong>
+      <span>Add your first entry or load demo data from the top bar.</span>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>

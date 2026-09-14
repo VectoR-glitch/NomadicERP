@@ -1,0 +1,13 @@
+# Runtime user data — never commit real records
+data/
+backups/
+reports/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Bundled Node runtime (large binary, not source)
+runtime/
+
+# Compiled installer (build output, not source)
+NomadicERP_Setup.exe

@@ -1,0 +1,28 @@
+NomadicERP Installer Build
+==========================
+
+Current status
+--------------
+The app is ready for installer packaging, but Inno Setup is not installed on
+this PC yet. Until Inno Setup is installed, use the portable zip package.
+
+How to create NomadicERP_Setup.exe
+----------------------------------
+1. Install Inno Setup 6 or 7 on the PC that will build the installer.
+2. Open the NomadicERP folder.
+3. Double-click "Build NomadicERP Installer.bat".
+4. After the build finishes, send "NomadicERP_Setup.exe" to the end user.
+
+What the installer will do
+--------------------------
+- Install NomadicERP into Program Files.
+- Create Start Menu shortcuts.
+- Optionally create a desktop shortcut.
+- Use the NomadicERP maple leaf icon for installer and app shortcuts.
+- Create local data, reports, and backups folders.
+- Launch NomadicERP after installation if the user leaves the final checkbox on.
+
+Portable fallback
+-----------------
+If you do not want to create an installer yet, send NomadicERP_MVP.zip instead.
+The user only needs to extract it and double-click "Launch NomadicERP.bat".

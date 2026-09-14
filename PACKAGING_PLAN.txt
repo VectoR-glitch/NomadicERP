@@ -1,0 +1,32 @@
+Packaging Plan
+==============
+
+Current first build
+-------------------
+This is a local browser app with a Node.js server and SQLite database when
+launched through "Launch NomadicERP.bat". It can still fall back to opening
+index.html directly if Node.js is not available.
+
+The app now includes professional Excel-compatible/CSV reports, master data,
+GRN, material issue, client payment, contractor bill/payment workflows, auto
+numbering, default dates, and direct reports/backups folder buttons.
+
+Why this first
+--------------
+- Fastest way to validate screens and workflows.
+- No hosting required.
+- No Python or database server required.
+- Easy to show to the client and adjust before packaging.
+
+Recommended production packaging
+--------------------------------
+Phase 1: Finalize the remaining business rules and print/report formats.
+Phase 2: Install Inno Setup 6 or 7 and run "Build NomadicERP Installer.bat".
+Phase 3: Installer creates desktop/start menu shortcuts and local data,
+backups, and reports folders.
+
+Important note
+--------------
+This folder now includes runtime/node.exe, so the end user should not need to
+install Node.js separately. NomadicERP_Setup.iss is ready for compiling with Inno
+Setup, but Inno Setup is not installed on this PC.
