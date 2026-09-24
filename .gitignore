@@ -11,3 +11,6 @@ runtime/
 
 # Compiled installer (build output, not source)
 NomadicERP_Setup.exe
+
+# Internal working notes, not for the public repo
+NOMADICERP_HANDOVER.md
